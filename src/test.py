@@ -82,8 +82,8 @@ class RINEX():
                     Note: sample rate ('30S' above) is variably included
                 
             Short name
-                bula1280.16d        Daily specifies hours as integer
-                alby028g.16n        Hourly specifies hours as alpha (a-z, 0-23)
+                bula1280.16d        Daily specifies hours field as integer
+                alby028g.16n        Hourly specifies hours as alpha (a-z=0-23)
                 ALBY124V00.16d      Highrate has alpha hours and specifies 
                                     minutes
         """
