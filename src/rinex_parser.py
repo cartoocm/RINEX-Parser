@@ -27,8 +27,10 @@ class RINEX():
 
         Additional attributes generated depend on header fields in file
         """
+        self.local_file = None
         if os.path.isfile(data):
             filename = os.path.basename(data)
+            self.local_file = data
             with open(data, 'rb') as file:
                 data = file.read()
 
@@ -39,15 +41,13 @@ class RINEX():
 
         self._parseFilename()
 
-        header, eoh, self.observations = data.partition('END OF HEADER')
+        header, eoh, observations = data.partition('END OF HEADER')
 
         if not eoh:
             raise InvalidHeader('Missing END OF HEADER field')
 
-        self.header = header + eoh
-
         parser = {'N': Navigational, 'M': Meteorological, 'O': Observational}
-        self.attributes = parser[self.data_type](self.header)
+        self.header = parser[self.data_type](header + eoh)
 
 
     def _parseFilename(self):
@@ -226,6 +226,10 @@ def n_A3(n):
 # Lambda funcion to remove excess whitespace from a string
 trim_whitespace = lambda a: ' '.join(a.split())
 
+
+class InvalidFilename(Exception):
+    """Indicates that a filename does not meet RINEX naming format standards
+    """
 
 class InvalidHeader(Exception):
     """Indicates that the RINEX header is syntactically incorrect in some way
