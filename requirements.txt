@@ -1,1 +1,1 @@
--e git://github.com/sighingnow/parsec.py.git#egg=parsec
+-e git://github.com/sighingnow/parsec.py.git#egg=parsec-3.0
