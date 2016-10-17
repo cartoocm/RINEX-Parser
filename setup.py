@@ -7,6 +7,6 @@ setup(
     author='Brandon Owen',
     author_email='brandon.owen@hotmail.com',
     packages=['rinexer'],
-    install_requires=['parsec==3.1'],
-    dependency_links=['http://github.com/umeat/parsec.py/tarball/master#egg=parsec-3.1']
+    install_requires=['parsec==3.0'],
+    dependency_links=['http://github.com/umeat/parsec.py/tarball/master#egg=parsec-3.0']
 )
