@@ -6,5 +6,6 @@ setup(
     description='Python module for parsing metadata from RINEX data files',
     author='Brandon Owen',
     author_email='brandon.owen@hotmail.com',
-    packages=['rinexer']
+    packages=['rinexer'],
+    dependency_links=['https://github.com/sighingnow/parsec.py.git#egg=parsec']
 )
