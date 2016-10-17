@@ -1,7 +1,6 @@
 import datetime
 import os
-import re
-import parsec as p
+from parsec import *
 from collections import defaultdict
 
 class RINEX():
@@ -179,17 +178,17 @@ class RINEXHeader():
 
         self.header_fields = dict(header_fields)
 
-        self.version, self.type, satellite = p.Parser(p.joint(
+        self.version, self.type, satellite = Parser(joint(
             n_ANY(9).parsecmap(float),
-            p.compose(n_ANY(11), p.one_of('MON')),
-            p.compose(n_ANY(19), n_ANY(1)))).parse(
+            compose(n_ANY(11), one_of('MON')),
+            compose(n_ANY(19), n_ANY(1)))).parse(
                 self.header_fields['RINEX VERSION / TYPE'])
 
     def _getMarkerInfo(self):
-        self.marker_name = p.Parser(n_ANY(60)).parsecmap(trim_whitespace).parse(
+        self.marker_name = Parser(n_ANY(60)).parsecmap(trim_whitespace).parse(
             self.header_fields['MARKER NAME'])
 
-        self.marker_number = p.Parser(n_ANY(20)).parsecmap(trim_whitespace).parse(
+        self.marker_number = Parser(n_ANY(20)).parsecmap(trim_whitespace).parse(
             self.header_fields['MARKER NUMBER'])
 
 
@@ -199,16 +198,16 @@ class ObservationalHeader(RINEXHeader):
 
         self._getMarkerInfo()
 
-        self.receiver_number, self.receiver_type, receiver_version = p.Parser(
-            p.count(n_ANY(20).parsecmap(trim_whitespace), 3)).parse(
+        self.receiver_number, self.receiver_type, receiver_version = Parser(
+            count(n_ANY(20).parsecmap(trim_whitespace), 3)).parse(
                 self.header_fields['REC # / TYPE / VERS'])
 
-        self.antenna_number, self.antenna_type = p.Parser(
-            p.count(n_ANY(20).parsecmap(trim_whitespace), 2)).parse(
+        self.antenna_number, self.antenna_type = Parser(
+            count(n_ANY(20).parsecmap(trim_whitespace), 2)).parse(
                 self.header_fields['ANT # / TYPE'])
 
-        self.antenna_height, self.antenna_east, self.antenna_north = p.Parser(
-            p.count(n_ANY(14).parsecmap(float), 3)).parse(
+        self.antenna_height, self.antenna_east, self.antenna_north = Parser(
+            count(n_ANY(14).parsecmap(float), 3)).parse(
                 self.header_fields['ANTENNA: DELTA H/E/N'])
 
         try:
@@ -237,17 +236,17 @@ class NavigationalHeader(RINEXHeader):
         RINEXHeader.__init__(self, header)
 
 
-# Custom Parsec parser generators
+# Custom parser generators
 def n_A(n):
     """Given n, return Parser for string of length n, containing only 
     alphanumeric characters
     """
-    return p.regex('([A-Za-z0-9]){{{0}}}'.format(n))
+    return regex('([A-Za-z0-9]){{{0}}}'.format(n))
 
 def n_I(n):
     """ Given n, return parser for an integer between one and n digits long
     """
-    return p.regex('([0-9]){{1,{0}}}'.format(n)).parsecmap(int)
+    return regex('([0-9]){{1,{0}}}'.format(n)).parsecmap(int)
 
 def n_ANY(n):
     """Given n, return Parser for string of n length containing any characters
@@ -255,14 +254,14 @@ def n_ANY(n):
     Useful for ignoring n characters with the compose >> or skip << operations
     or for capturing fixed length fields
     """
-    return p.regex('(.){{{0}}}'.format(n))
+    return regex('(.){{{0}}}'.format(n))
 
 def n_A3(n):
     """Given n, return parser for space seperated list of n A3's
 
     A3 is a token for three successive alphanumeric characters
     """
-    return p.count(parsec.compose(parsec.spaces(), n_A(3)), n)
+    return count(compose(spaces(), n_A(3)), n)
 
 # Lambda funcion to remove excess whitespace from a string
 trim_whitespace = lambda a: ' '.join(a.split())
