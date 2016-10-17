@@ -7,5 +7,5 @@ setup(
     author='Brandon Owen',
     author_email='brandon.owen@hotmail.com',
     packages=['rinexer'],
-    dependency_links=['https://github.com/sighingnow/parsec.py/tarball/master#egg=parsec']
+    dependency_links=['http://github.com/sighingnow/parsec.py/tarball/master#egg=parsec']
 )
